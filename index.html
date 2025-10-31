@@ -1,6 +1,357 @@
-<html>
-<title> my page </title>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>My Page — Lab Materials</title>
+
+  <!-- Optional: Google font (works without web.run) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg1: 235 88 140;    /* hue for gradient */
+      --bg2: 99 102 241;
+      --fg: #0f172a;
+      --muted: #6b7280;
+      --glass: rgba(255,255,255,0.06);
+      --card-radius: 14px;
+    }
+
+    /* Dark theme variables (applied via .dark on <html>) */
+    html.dark {
+      --fg: #e6eef8;
+      --muted: #9aa6bd;
+      --glass: rgba(0,0,0,0.36);
+      background: linear-gradient(180deg, rgba(var(--bg2),0.12), rgba(var(--bg1),0.06));
+    }
+
+    /* Page background */
+    body{
+      margin:0;
+      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+      color:var(--fg);
+      background: linear-gradient(135deg, rgba(var(--bg1),0.10), rgba(var(--bg2),0.08));
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:32px;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+
+    /* Layout container */
+    .wrap{
+      width:100%;
+      max-width:980px;
+      display:grid;
+      grid-template-columns: 1fr 380px;
+      gap:28px;
+      align-items:start;
+    }
+
+    /* Card / hero */
+    .hero{
+      background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.4));
+      border-radius:var(--card-radius);
+      padding:28px;
+      box-shadow: 0 10px 30px rgba(16,24,40,0.08);
+      backdrop-filter: blur(6px);
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+    html.dark .hero{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      box-shadow: 0 10px 30px rgba(2,6,23,0.6);
+    }
+    .hero:hover{ transform: translateY(-6px); box-shadow: 0 18px 40px rgba(16,24,40,0.12); }
+
+    .kicker{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:600;
+      font-size:12px;
+      letter-spacing:.6px;
+      background: linear-gradient(90deg, rgba(var(--bg1),0.15), rgba(var(--bg2),0.15));
+      color:var(--fg);
+      margin-bottom:14px;
+    }
+
+    h1{
+      margin:6px 0 8px 0;
+      font-size:28px;
+      line-height:1.05;
+      letter-spacing:-0.02em;
+    }
+    p.lead{
+      margin:0 0 18px 0;
+      color:var(--muted);
+      font-size:15px;
+    }
+
+    /* Call-to-action */
+    .cta{
+      display:inline-grid;
+      align-items:center;
+      grid-auto-flow:column;
+      gap:12px;
+      margin-top:16px;
+    }
+    .btn{
+      --btn-bg: linear-gradient(90deg, rgb(var(--bg1)), rgb(var(--bg2)));
+      background: var(--btn-bg);
+      color:white;
+      padding:12px 18px;
+      border-radius:10px;
+      text-decoration:none;
+      font-weight:700;
+      font-size:15px;
+      box-shadow: 0 8px 20px rgba(99,102,241,0.18);
+      transition: transform .14s ease, box-shadow .14s ease, filter .14s ease;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+    }
+    .btn:hover{ transform: translateY(-3px); filter:brightness(1.03); box-shadow: 0 18px 40px rgba(99,102,241,0.22); }
+    .btn:active{ transform: translateY(-1px) scale(.998); }
+    .btn .arrow{ font-weight:900; opacity:.98; transform:translateX(0); transition: transform .18s ease; }
+    .btn:hover .arrow{ transform: translateX(6px); }
+
+    /* Side panel */
+    .panel{
+      background: var(--glass);
+      border-radius:12px;
+      padding:18px;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      align-items:stretch;
+      box-shadow: 0 6px 18px rgba(16,24,40,0.06);
+    }
+    .meta{
+      font-size:13px;
+      color:var(--muted);
+    }
+    .list{
+      display:flex;
+      gap:10px;
+      flex-direction:column;
+      margin-top:8px;
+    }
+    .pill{
+      background: rgba(255,255,255,0.04);
+      padding:8px 10px;
+      border-radius:999px;
+      font-weight:600;
+      font-size:13px;
+      color:var(--muted);
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+    }
+
+    /* Footer */
+    footer{
+      margin-top:18px;
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    /* Responsive */
+    @media (max-width:920px){
+      .wrap{ grid-template-columns: 1fr; }
+      .panel{ order:2; }
+    }
+
+    /* Accessible focus */
+    a:focus, button:focus{
+      outline: 3px solid rgba(99,102,241,0.18);
+      outline-offset:3px;
+      border-radius:8px;
+    }
+
+    /* Small code preview */
+    pre.code{
+      background: rgba(0,0,0,0.04);
+      padding:12px;
+      border-radius:10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+      font-size:13px;
+      color:var(--fg);
+      overflow:auto;
+    }
+
+    /* theme toggle */
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:14px;
+    }
+    .theme-btn{
+      background:transparent;
+      border:1px solid rgba(0,0,0,0.06);
+      padding:8px 10px;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:600;
+      color:var(--muted);
+    }
+    html.dark .theme-btn{
+      border:1px solid rgba(255,255,255,0.06);
+    }
+
+  </style>
+</head>
+
 <body>
-Click here for <a href = "https://github.com/cryptasim/MACHINE-LEARNING-LAB" >lab materials </a>
+  <main class="wrap" role="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="topbar" style="padding:0;">
+        <span class="kicker">Lab • ML</span>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button class="theme-btn" id="themeToggle" aria-pressed="false" title="Toggle dark mode">🌙 Toggle</button>
+        </div>
+      </div>
+
+      <h1 id="hero-title">Machine Learning Lab Materials</h1>
+      <p class="lead">A clean, accessible landing for your repository — quick access to lab materials, links, and example code. Designed to look sharp on phones and desktops.</p>
+
+      <div class="cta" role="region" aria-label="Primary call to action">
+        <!-- Improved link: opens in new tab and uses rel for security -->
+        <a class="btn" href="https://github.com/cryptasim/MACHINE-LEARNING-LAB" target="_blank" rel="noopener noreferrer">
+          View lab materials
+          <span class="arrow">→</span>
+        </a>
+
+        <!-- Secondary copy button (copies the repo URL) -->
+        <button class="btn" id="copyBtn" style="background:transparent;color:var(--fg);box-shadow:none;border:1px solid rgba(0,0,0,0.06);">
+          Copy link
+        </button>
+      </div>
+
+      <hr style="margin:20px 0; border:none; height:1px; background:linear-gradient(90deg, rgba(16,24,40,0.04), rgba(16,24,40,0.02));">
+
+      <div style="display:grid;grid-template-columns:1fr 160px;gap:16px;align-items:start;">
+        <div>
+          <h3 style="margin:4px 0 10px 0;font-size:16px;">Quick preview</h3>
+          <pre class="code" aria-hidden="false">&lt;a href="https://github.com/cryptasim/MACHINE-LEARNING-LAB"&gt;lab materials&lt;/a&gt;</pre>
+        </div>
+
+        <div style="text-align:right;">
+          <div style="font-size:12px;color:var(--muted);">Last updated</div>
+          <div style="font-weight:700;margin-top:6px;">Oct 31, 2025</div>
+        </div>
+      </div>
+
+      <footer>
+        Tip: right-click the “View lab materials” button to open in a new window, or use the copy button to paste the URL elsewhere.
+      </footer>
+    </section>
+
+    <aside class="panel" aria-labelledby="panel-title">
+      <h2 id="panel-title" style="margin:0;font-size:15px;">Page Extras</h2>
+
+      <div class="meta">Helpful links & quick actions</div>
+      <div class="list">
+        <a class="pill" href="https://github.com/cryptasim/MACHINE-LEARNING-LAB" target="_blank" rel="noopener noreferrer" title="Open the repo in a new tab">
+          📁 Open repo
+        </a>
+
+        <a class="pill" href="https://github.com/cryptasim/MACHINE-LEARNING-LAB/issues" target="_blank" rel="noopener noreferrer" title="Open issues">
+          🐞 Issues
+        </a>
+
+        <a class="pill" href="https://github.com/cryptasim/MACHINE-LEARNING-LAB/pulls" target="_blank" rel="noopener noreferrer" title="Open pull requests">
+          🔁 Pulls
+        </a>
+      </div>
+
+      <hr style="border:none;height:1px;background:linear-gradient(90deg, rgba(0,0,0,0.03), rgba(0,0,0,0.01));margin:10px 0;">
+
+      <div>
+        <div style="font-size:13px;color:var(--muted);margin-bottom:8px;">Accessibility</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.4;">
+          Reduced motion support and keyboard-friendly focus are included. The main link has an accessible label and opens securely.
+        </div>
+      </div>
+
+      <div style="margin-top:auto">
+        <small style="color:var(--muted);">Made with ❤️ — looksmaxxed</small>
+      </div>
+    </aside>
+  </main>
+
+  <script>
+    // Theme toggle: persists in localStorage
+    (function(){
+      const root = document.documentElement;
+      const btn = document.getElementById('themeToggle');
+      const copyBtn = document.getElementById('copyBtn');
+      const stored = localStorage.getItem('theme-mode');
+
+      function setDark(d){
+        if(d){
+          root.classList.add('dark');
+          btn.textContent = '☀️ Light';
+          btn.setAttribute('aria-pressed','true');
+        } else {
+          root.classList.remove('dark');
+          btn.textContent = '🌙 Toggle';
+          btn.setAttribute('aria-pressed','false');
+        }
+      }
+
+      // initialize
+      if(stored === 'dark') setDark(true);
+      else if(stored === 'light') setDark(false);
+      else {
+        // default follows prefers-color-scheme
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        setDark(prefersDark);
+      }
+
+      btn.addEventListener('click', () => {
+        const dark = !root.classList.contains('dark');
+        setDark(dark);
+        localStorage.setItem('theme-mode', dark ? 'dark' : 'light');
+      });
+
+      copyBtn.addEventListener('click', async () => {
+        const text = 'https://github.com/cryptasim/MACHINE-LEARNING-LAB';
+        try {
+          await navigator.clipboard.writeText(text);
+          copyBtn.textContent = 'Copied ✓';
+          setTimeout(() => { copyBtn.textContent = 'Copy link'; }, 1600);
+        } catch (e) {
+          // fallback: create a temporary textarea
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          document.body.appendChild(ta);
+          ta.select();
+          try {
+            document.execCommand('copy');
+            copyBtn.textContent = 'Copied ✓';
+            setTimeout(() => { copyBtn.textContent = 'Copy link'; }, 1600);
+          } finally {
+            document.body.removeChild(ta);
+          }
+        }
+      });
+
+      // Respect reduced motion preference
+      const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+      if(mq.matches) {
+        document.documentElement.style.setProperty('--reduced-motion', '1');
+        // optionally remove transitions
+        document.querySelectorAll('*').forEach(el => {
+          el.style.transitionDuration = '0s';
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
